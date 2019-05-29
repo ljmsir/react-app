@@ -2,6 +2,7 @@ import React from 'react';
 import {Form, Icon, Input, Button} from 'antd';
 import LoginBg from './../../assets/images/big-bg.jpg';
 import './index.less';
+import {UserLogin} from './../../api/user/index';
 
 const FormItem = Form.Item;
 
@@ -12,13 +13,17 @@ class Login extends React.Component {
 
         }
     }
-
+    
     handleSubmit = (e) => {
         e.preventDefault();
         this.props.form.validateFields((err, values) => {
             if (!err) {
                 console.log('Received values of form: ', values);
-                this.props.history.push('/home');
+                UserLogin(values).then(res => {
+                    console.log(res);
+                    if (!res) return;
+                    this.props.history.push('/home');
+                })
             }
         });
     }
@@ -33,7 +38,7 @@ class Login extends React.Component {
                 <div className="login-pandel">
                     <Form onSubmit={this.handleSubmit} className="login-form">
                         <FormItem>
-                            {getFieldDecorator('userName', {
+                            {getFieldDecorator('loginName', {
                                 rules: [{ required: true, message: '请输入用户名!' }],
                             })(
                                 <Input size="large" prefix={<Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />} placeholder="用户名" />
